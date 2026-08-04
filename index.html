@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Precios e Inventario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Encabezado Principal -->
+    <header class="header">
+        <h1>PRECIOS ACTUALIZADOS</h1>
+        <p class="update-tag">Última actualización: Hoy</p>
+    </header>
+
+    <!-- Barra de Búsqueda y Filtros -->
+    <section class="controls-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar producto (ej: harina, aceite)..." onkeyup="filterProducts()">
+        </div>
+        
+        <div class="category-buttons">
+            <button class="btn-cat active" onclick="filterCategory('todos')">Todos</button>
+            <button class="btn-cat" onclick="filterCategory('viveres')">Víveres</button>
+            <button class="btn-cat" onclick="filterCategory('charcuteria')">Charcutería</button>
+            <button class="btn-cat" onclick="filterCategory('verduras')">Verduras</button>
+        </div>
+    </section>
+
+    <!-- Tabla de Precios -->
+    <main class="table-container">
+        <table id="priceTable">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Presentación</th>
+                    <th>Precio (BS)</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <!-- Cuerpo vacío para que carguen únicamente los datos de Supabase sin parpadeos -->
+            <tbody>
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="footer">
+        <p>Los precios están sujetos a cambios sin previo aviso.</p>
+    </footer>
+
+    <!-- 1. Carga la librería de Supabase primero -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. Carga tu código de JavaScript después -->
+    <script src="script.js"></script>
+
+</body>
+</html>
