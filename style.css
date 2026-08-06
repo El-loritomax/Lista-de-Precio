@@ -17,40 +17,41 @@ body {
     background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
     color: white;
     text-align: center;
-    padding: 20px 15px;
+    padding: 22px 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 }
 
 .update-tag {
-    font-size: 0.8rem;
-    margin-top: 4px;
-    opacity: 0.9;
-    background: rgba(255, 255, 255, 0.15);
+    font-size: 0.85rem;
+    margin-top: 6px;
+    opacity: 0.95;
+    background: rgba(255, 255, 255, 0.2);
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
 }
 
-/* Contenedor dinámico: por defecto centra las cosas */
+/* Contenedor dinámico */
 .main-layout {
     display: flex;
-    max-width: 900px;
+    max-width: 950px;
     width: 100%;
-    margin: 20px auto;
+    margin: 25px auto;
     padding: 0 15px;
     gap: 20px;
     flex: 1;
     transition: max-width 0.3s ease;
 }
 
-/* Cuando hay productos, se expande para acomodar el carrito al lado */
 .main-layout.with-cart {
-    max-width: 1250px;
+    max-width: 1300px;
 }
 
 .content-center {
@@ -59,23 +60,24 @@ body {
 }
 
 .controls-container {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .search-box input {
     width: 100%;
-    padding: 12px 18px;
-    font-size: 1rem;
-    border: 2px solid #e0e0e0;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    border: 2px solid #dcdcdc;
     border-radius: 12px;
     outline: none;
     background-color: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
 }
 
 .search-box input:focus {
     border-color: #2e7d32;
-    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.15);
+    box-shadow: 0 4px 18px rgba(46, 125, 50, 0.2);
 }
 
 .category-buttons {
@@ -90,9 +92,9 @@ body {
     background-color: #ffffff;
     border: 1px solid #dcdcdc;
     color: #555;
-    padding: 8px 14px;
+    padding: 9px 16px;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     cursor: pointer;
     white-space: nowrap;
     font-weight: 600;
@@ -107,6 +109,7 @@ body {
     background-color: #2e7d32;
     color: white;
     border-color: #2e7d32;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
 }
 
 .table-container {
@@ -124,7 +127,7 @@ table {
 }
 
 th, td {
-    padding: 14px 12px;
+    padding: 16px 14px;
     border-bottom: 1px solid #f1f3f5;
     vertical-align: middle;
 }
@@ -132,38 +135,88 @@ th, td {
 th {
     background-color: #f8f9fa;
     color: #495057;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
+    font-weight: 700;
 }
 
 .product-name {
-    font-weight: 600;
+    font-weight: 700;
     color: #212529;
+    font-size: 1.05rem;
 }
 
-.price {
-    font-weight: 700;
+/* --- PRECIOS LLAMATIVOS EN LA TABLA --- */
+.price-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-usd {
+    font-size: 1.25rem;
+    font-weight: 800;
     color: #1b5e20;
-    font-size: 1rem;
+    letter-spacing: -0.5px;
+}
+
+.price-bs {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #d32f2f;
+    margin-top: 2px;
 }
 
 .badge {
-    padding: 4px 8px;
+    padding: 5px 10px;
     border-radius: 6px;
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
 .in-stock { background-color: #e8f5e9; color: #2e7d32; }
 .low-stock { background-color: #fffde7; color: #f57f17; }
 .out-stock { background-color: #ffebee; color: #c62828; }
 
+.btn-agregar {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-agregar:hover {
+    background: #1b5e20;
+}
+
+.tasa-box {
+    text-align: center;
+    margin: 25px 0;
+    font-size: 1.05rem;
+    color: #333;
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    border: 1px solid #e0e0e0;
+}
+
+#tasa-dolar {
+    font-weight: 900;
+    color: #1b5e20;
+    font-size: 1.15rem;
+}
+
 /* BARRA LATERAL DEL CARRITO */
 .cart-sidebar {
-    width: 340px;
+    width: 360px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     border: 1px solid #eaeaea;
     display: flex;
     flex-direction: column;
@@ -176,7 +229,7 @@ th {
 .cart-header {
     background-color: #1b5e20;
     color: white;
-    padding: 15px;
+    padding: 16px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     display: flex;
@@ -185,17 +238,17 @@ th {
 }
 
 .cart-header h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin: 0;
 }
 
 .badge-count {
     background: white;
     color: #1b5e20;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 0.85rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 0.95rem;
 }
 
 .cart-items-container {
@@ -210,11 +263,11 @@ th {
     align-items: center;
     margin-bottom: 12px;
     border-bottom: 1px solid #f1f3f5;
-    padding-bottom: 8px;
+    padding-bottom: 10px;
 }
 
 .cart-footer {
-    padding: 15px;
+    padding: 16px;
     border-top: 1px solid #eee;
     background-color: #fcfcfc;
     border-bottom-left-radius: 12px;
@@ -222,44 +275,85 @@ th {
 }
 
 .cart-totals {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    background: #f1f8e9;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #c8e6c9;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 1rem;
+    color: #333;
+}
+
+.bs-row {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #c8e6c9;
+}
+
+/* --- TOTALES MUY LLAMATIVOS EN EL CARRITO --- */
+.highlight-price-usd {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #1b5e20;
+}
+
+.highlight-price-bs {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #d32f2f;
 }
 
 .cart-actions {
     display: flex;
-    gap: 8px;
+    gap: 10px;
 }
 
 .btn-vaciar {
     background: #d32f2f;
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     flex: 1;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+
+.btn-vaciar:hover {
+    background: #b71c1c;
 }
 
 .btn-whatsapp {
     background: #25d366;
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     flex: 2;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+
+.btn-whatsapp:hover {
+    background: #1ebe5d;
 }
 
 .footer {
     text-align: center;
-    padding: 15px;
-    font-size: 0.8rem;
+    padding: 20px;
+    font-size: 0.85rem;
     color: #777;
     background: #fff;
     border-top: 1px solid #ddd;
+    margin-top: auto;
 }

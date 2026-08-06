@@ -48,7 +48,7 @@ const SUPABASE_URL = "https://lswunozbkpfymbrreqjn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_sIR7w5x-o3ZDl9MlgaWgWg_QLqdiF0b";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Obtener tasa del BCV automáticamente con proxy
+// Obtener tasa del BCV automáticamente con respaldo seguro
 async function obtenerTasaBCV() {
     try {
         const urlApi = encodeURIComponent('https://ve.dolarapi.com/v1/dolares/oficial');
@@ -73,7 +73,7 @@ async function obtenerTasaBCV() {
     }
 }
 
-// Obtener productos y renderizar
+// Obtener productos y renderizar con precios grandes y llamativos
 async function obtenerProductos() {
     if (tasaBCV === 0) {
         await obtenerTasaBCV();
@@ -103,13 +103,15 @@ async function obtenerProductos() {
             fila.innerHTML = `
                 <td class="product-name">${producto.nombre || 'Sin nombre'}</td>
                 <td>${producto.presentacion || '1 Kilo / Kg'}</td>
-                <td class="price">
-                    $${precioUSD.toFixed(2)} 
-                    <small style="display:block; color: #666; font-size: 0.85em;">(Bs. ${precioBs})</small>
+                <td>
+                    <div class="price-container">
+                        <span class="price-usd">$${precioUSD.toFixed(2)}</span>
+                        <span class="price-bs">Bs. ${precioBs}</span>
+                    </div>
                 </td>
                 <td><span class="badge in-stock">${producto.estado || 'Disponible'}</span></td>
                 <td>
-                    <button onclick="agregarAlCarrito('${producto.id}')" style="background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">+ Agregar</button>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">+ Agregar</button>
                 </td>
             `;
 
@@ -118,7 +120,7 @@ async function obtenerProductos() {
     }
 }
 
-// --- FUNCIONES DEL CARRITO DINÁMICO ---
+// --- FUNCIONES DEL CARRITO ---
 function agregarAlCarrito(idProducto) {
     const producto = listaProductosGlobal.find(p => p.id == idProducto);
     if (!producto) return;
@@ -163,11 +165,9 @@ function actualizarCarritoUI() {
     let contenidoHtml = '';
 
     if (carrito.length === 0) {
-        // Si el carrito está vacío, ocultamos la barra lateral y centramos la tabla
         cartSidebar.style.display = 'none';
         mainLayout.classList.remove('with-cart');
     } else {
-        // Si hay productos, mostramos la barra lateral y movemos la tabla a un lado
         cartSidebar.style.display = 'flex';
         mainLayout.classList.add('with-cart');
 
@@ -179,13 +179,13 @@ function actualizarCarritoUI() {
             contenidoHtml += `
                 <div class="cart-item-row">
                     <div>
-                        <strong style="font-size: 0.9rem;">${item.nombre}</strong><br>
+                        <strong style="font-size: 0.95rem; color: #222;">${item.nombre}</strong><br>
                         <small style="color: #666; font-size: 0.8rem;">$${item.precioUSD.toFixed(2)} c/u</small>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
-                        <span style="font-size: 0.9rem; font-weight: bold;">${item.cantidad}</span>
-                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 26px; height: 26px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;">-</button>
+                        <span style="font-size: 1rem; font-weight: 800; color: #1b5e20; min-width: 18px; text-align: center;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 26px; height: 26px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;">+</button>
                     </div>
                 </div>
             `;

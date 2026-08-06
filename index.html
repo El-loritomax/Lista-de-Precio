@@ -21,7 +21,7 @@
         <div class="content-center">
             <section class="controls-container">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Buscar producto (ej: harina, aceite)..." onkeyup="filterProducts()">
+                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto (ej: harina, aceite)..." onkeyup="filterProducts()">
                 </div>
                 
                 <div class="category-buttons">
@@ -50,8 +50,8 @@
                 </table>
             </main>
 
-            <div style="text-align: center; margin: 25px 0; font-size: 0.95rem; color: #333;">
-                Tasa del dólar oficial: <span id="tasa-dolar" style="font-weight: bold; color: #2e7d32;">Cargando...</span>
+            <div class="tasa-box">
+                Tasa del dólar oficial BCV: <span id="tasa-dolar">Cargando...</span>
             </div>
         </div>
 
@@ -68,13 +68,19 @@
 
             <div class="cart-footer">
                 <div class="cart-totals">
-                    <p><strong>Total USD:</strong> $<span id="carrito-total-usd">0.00</span></p>
-                    <p style="color: #2e7d32; margin-top: 5px;"><strong>Total Bs:</strong> Bs. <span id="carrito-total-bs">0.00</span></p>
+                    <div class="total-row">
+                        <span>Total USD:</span>
+                        <span class="highlight-price-usd">$<span id="carrito-total-usd">0.00</span></span>
+                    </div>
+                    <div class="total-row bs-row">
+                        <span>Total Bs:</span>
+                        <span class="highlight-price-bs">Bs. <span id="carrito-total-bs">0.00</span></span>
+                    </div>
                 </div>
 
                 <div class="cart-actions">
                     <button onclick="vaciarCarrito()" class="btn-vaciar">Vaciar</button>
-                    <button onclick="enviarPedidoWhatsApp()" class="btn-whatsapp">Enviar WhatsApp</button>
+                    <button onclick="enviarPedidoWhatsApp()" class="btn-whatsapp">Enviar Pedido 🚀</button>
                 </div>
             </div>
         </aside>
