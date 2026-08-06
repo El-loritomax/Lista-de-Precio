@@ -8,56 +8,69 @@
 body {
     background: linear-gradient(135deg, #f4f6f8 0%, #e9ecef 100%);
     color: #333;
-    padding-bottom: 60px;
     min-height: 100vh;
-}
-
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
     background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
     color: white;
     text-align: center;
-    padding: 25px 15px;
+    padding: 20px 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 .update-tag {
-    font-size: 0.85rem;
-    margin-top: 6px;
+    font-size: 0.8rem;
+    margin-top: 4px;
     opacity: 0.9;
     background: rgba(255, 255, 255, 0.15);
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Contenedor dinámico: por defecto centra las cosas */
+.main-layout {
+    display: flex;
+    max-width: 900px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 15px;
+    gap: 20px;
+    flex: 1;
+    transition: max-width 0.3s ease;
+}
+
+/* Cuando hay productos, se expande para acomodar el carrito al lado */
+.main-layout.with-cart {
+    max-width: 1250px;
+}
+
+.content-center {
+    width: 100%;
+    transition: width 0.3s ease;
 }
 
 .controls-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 0 15px;
+    margin-bottom: 15px;
 }
 
 .search-box input {
     width: 100%;
-    padding: 14px 20px;
-    font-size: 1.05rem;
+    padding: 12px 18px;
+    font-size: 1rem;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
     outline: none;
     background-color: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
 }
 
 .search-box input:focus {
@@ -67,43 +80,36 @@ body {
 
 .category-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 8px;
+    margin-top: 12px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding-bottom: 5px;
 }
 
 .btn-cat {
     background-color: #ffffff;
     border: 1px solid #dcdcdc;
     color: #555;
-    padding: 9px 18px;
-    border-radius: 25px;
-    font-size: 0.9rem;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
     font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     transition: all 0.2s ease;
 }
 
 .btn-cat:hover {
     background-color: #f1f3f5;
-    border-color: #bcbcbc;
-    transform: translateY(-1px);
 }
 
 .btn-cat.active {
     background-color: #2e7d32;
     color: white;
     border-color: #2e7d32;
-    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
 }
 
 .table-container {
-    max-width: 800px;
-    margin: 15px auto;
-    padding: 0;
     background: white;
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
@@ -118,7 +124,7 @@ table {
 }
 
 th, td {
-    padding: 16px 14px;
+    padding: 14px 12px;
     border-bottom: 1px solid #f1f3f5;
     vertical-align: middle;
 }
@@ -126,9 +132,8 @@ th, td {
 th {
     background-color: #f8f9fa;
     color: #495057;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .product-name {
@@ -139,13 +144,13 @@ th {
 .price {
     font-weight: 700;
     color: #1b5e20;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .badge {
-    padding: 5px 10px;
+    padding: 4px 8px;
     border-radius: 6px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
 }
 
@@ -153,9 +158,108 @@ th {
 .low-stock { background-color: #fffde7; color: #f57f17; }
 .out-stock { background-color: #ffebee; color: #c62828; }
 
+/* BARRA LATERAL DEL CARRITO */
+.cart-sidebar {
+    width: 340px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eaeaea;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    flex-shrink: 0;
+}
+
+.cart-header {
+    background-color: #1b5e20;
+    color: white;
+    padding: 15px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.badge-count {
+    background: white;
+    color: #1b5e20;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.cart-items-container {
+    padding: 15px;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f1f3f5;
+    padding-bottom: 8px;
+}
+
+.cart-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background-color: #fcfcfc;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.cart-totals {
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.cart-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-vaciar {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 2;
+    font-size: 0.9rem;
+}
+
 .footer {
     text-align: center;
-    margin-top: 30px;
-    font-size: 0.85rem;
-    color: #888;
+    padding: 15px;
+    font-size: 0.8rem;
+    color: #777;
+    background: #fff;
+    border-top: 1px solid #ddd;
 }

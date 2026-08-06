@@ -118,7 +118,7 @@ async function obtenerProductos() {
     }
 }
 
-// --- FUNCIONES DEL CARRITO ---
+// --- FUNCIONES DEL CARRITO DINÁMICO ---
 function agregarAlCarrito(idProducto) {
     const producto = listaProductosGlobal.find(p => p.id == idProducto);
     if (!producto) return;
@@ -151,7 +151,9 @@ function cambiarCantidad(idProducto, cambio) {
 }
 
 function actualizarCarritoUI() {
-    const contador = document.getElementById('carrito-contador');
+    const mainLayout = document.getElementById('mainLayout');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const contadorBadge = document.getElementById('carrito-contador-badge');
     const listaHtml = document.getElementById('lista-carrito');
     const totalUsdEl = document.getElementById('carrito-total-usd');
     const totalBsEl = document.getElementById('carrito-total-bs');
@@ -161,38 +163,39 @@ function actualizarCarritoUI() {
     let contenidoHtml = '';
 
     if (carrito.length === 0) {
-        contenidoHtml = '<p style="color: #666; text-align: center;">El carrito está vacío</p>';
+        // Si el carrito está vacío, ocultamos la barra lateral y centramos la tabla
+        cartSidebar.style.display = 'none';
+        mainLayout.classList.remove('with-cart');
     } else {
+        // Si hay productos, mostramos la barra lateral y movemos la tabla a un lado
+        cartSidebar.style.display = 'flex';
+        mainLayout.classList.add('with-cart');
+
         carrito.forEach(item => {
             totalItems += item.cantidad;
             let subtotalUsd = item.precioUSD * item.cantidad;
             totalUsd += subtotalUsd;
 
             contenidoHtml += `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                <div class="cart-item-row">
                     <div>
-                        <strong>${item.nombre}</strong> <small>(${item.presentacion})</small><br>
-                        <span style="color: #666; font-size: 0.9rem;">$${item.precioUSD.toFixed(2)} c/u</span>
+                        <strong style="font-size: 0.9rem;">${item.nombre}</strong><br>
+                        <small style="color: #666; font-size: 0.8rem;">$${item.precioUSD.toFixed(2)} c/u</small>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #ccc; border: none; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
-                        <span>${item.cantidad}</span>
-                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
+                        <span style="font-size: 0.9rem; font-weight: bold;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
                     </div>
                 </div>
             `;
         });
     }
 
-    contador.textContent = totalItems;
+    contadorBadge.textContent = totalItems;
     listaHtml.innerHTML = contenidoHtml;
     totalUsdEl.textContent = totalUsd.toFixed(2);
     totalBsEl.textContent = (totalUsd * tasaBCV).toFixed(2);
-}
-
-function toggleModalCarrito() {
-    const modal = document.getElementById('modal-carrito');
-    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
 }
 
 function vaciarCarrito() {
