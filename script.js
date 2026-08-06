@@ -1,13 +1,81 @@
-let tasaBCV = 0;
+let tasaBCV = 36.50; 
 let carrito = [];
 let listaProductosGlobal = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    const title = document.querySelector('h1');
-    if (title) {
-        title.textContent = 'Lista de Precio';
-    }
+    obtenerTasaEstableYProductos();
 });
+
+const SUPABASE_URL = "https://lswunozbkpfymbrreqjn.supabase.co";
+const SUPABASE_KEY = "sb_publishable_sIR7w5x-o3ZDl9MlgaWgWg_QLqdiF0b";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function obtenerTasaEstableYProductos() {
+    try {
+        const respuesta = await fetch('https://ve.dolarapi.com/v1/dolares/oficial', { cache: 'no-store' });
+        if (respuesta.ok) {
+            const datos = await respuesta.json();
+            if (datos && datos.promedio && datos.promedio > 0) {
+                tasaBCV = datos.promedio;
+            }
+        }
+    } catch (e) {
+        console.warn("Usando tasa de respaldo por fallo de red.");
+    }
+
+    const elTasa = document.getElementById("tasa-dolar");
+    if (elTasa) {
+        elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)}`;
+    }
+
+    await obtenerProductos();
+}
+
+async function obtenerProductos() {
+    const { data, error } = await supabaseClient
+        .from('productos')
+        .select('*');
+
+    if (error) {
+        console.error("Error al conectar con Supabase:", error);
+    } else {
+        listaProductosGlobal = data || [];
+        renderizarTabla(listaProductosGlobal);
+    }
+}
+
+function renderizarTabla(productos) {
+    const tablaBody = document.querySelector('tbody');
+    if (!tablaBody) return;
+
+    tablaBody.innerHTML = '';
+
+    productos.forEach(producto => {
+        const fila = document.createElement('tr');
+        const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
+        fila.className = `product-row ${catClase}`;
+
+        const precioUSD = parseFloat(producto.precio) || 0;
+        const precioBs = (precioUSD * tasaBCV).toFixed(2);
+
+        fila.innerHTML = `
+            <td class="product-name">${producto.nombre || 'Sin nombre'}</td>
+            <td>${producto.presentacion || '1 Kilo / Kg'}</td>
+            <td>
+                <div class="price-container">
+                    <span class="price-usd">$${precioUSD.toFixed(2)}</span>
+                    <span class="price-bs">Bs. ${precioBs}</span>
+                </div>
+            </td>
+            <td><span class="badge in-stock">${producto.estado || 'Disponible'}</span></td>
+            <td>
+                <button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">+ Agregar</button>
+            </td>
+        `;
+
+        tablaBody.appendChild(fila);
+    });
+}
 
 function filterProducts() {
     let input = document.getElementById("searchInput").value.toLowerCase();
@@ -43,84 +111,6 @@ function filterCategory(category) {
     });
 }
 
-// Configuración de Supabase
-const SUPABASE_URL = "https://lswunozbkpfymbrreqjn.supabase.co";
-const SUPABASE_KEY = "sb_publishable_sIR7w5x-o3ZDl9MlgaWgWg_QLqdiF0b";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Obtener tasa del BCV automáticamente con respaldo seguro
-async function obtenerTasaBCV() {
-    try {
-        const urlApi = encodeURIComponent('https://ve.dolarapi.com/v1/dolares/oficial');
-        const respuesta = await fetch(`https://api.allorigins.win/get?url=${urlApi}`);
-        const data = await respuesta.json();
-        const datos = JSON.parse(data.contents);
-        
-        tasaBCV = datos.promedio;
-        console.log("Tasa BCV cargada:", tasaBCV);
-
-        const elTasa = document.getElementById("tasa-dolar");
-        if (elTasa) {
-            elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)}`;
-        }
-    } catch (error) {
-        console.error("Error al obtener tasa, usando respaldo:", error);
-        tasaBCV = 36.50; 
-        const elTasa = document.getElementById("tasa-dolar");
-        if (elTasa) {
-            elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)} (Aproximada)`;
-        }
-    }
-}
-
-// Obtener productos y renderizar con precios grandes y llamativos
-async function obtenerProductos() {
-    if (tasaBCV === 0) {
-        await obtenerTasaBCV();
-    }
-
-    const { data, error } = await supabaseClient
-        .from('productos')
-        .select('*');
-
-    if (error) {
-        console.error("Error en Supabase:", error);
-    } else {
-        listaProductosGlobal = data;
-        const tablaBody = document.querySelector('tbody');
-        if (!tablaBody) return;
-
-        tablaBody.innerHTML = '';
-
-        data.forEach(producto => {
-            const fila = document.createElement('tr');
-            const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
-            fila.className = `product-row ${catClase}`;
-
-            const precioUSD = parseFloat(producto.precio) || 0;
-            const precioBs = (precioUSD * tasaBCV).toFixed(2);
-
-            fila.innerHTML = `
-                <td class="product-name">${producto.nombre || 'Sin nombre'}</td>
-                <td>${producto.presentacion || '1 Kilo / Kg'}</td>
-                <td>
-                    <div class="price-container">
-                        <span class="price-usd">$${precioUSD.toFixed(2)}</span>
-                        <span class="price-bs">Bs. ${precioBs}</span>
-                    </div>
-                </td>
-                <td><span class="badge in-stock">${producto.estado || 'Disponible'}</span></td>
-                <td>
-                    <button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">+ Agregar</button>
-                </td>
-            `;
-
-            tablaBody.appendChild(fila);
-        });
-    }
-}
-
-// --- FUNCIONES DEL CARRITO ---
 function agregarAlCarrito(idProducto) {
     const producto = listaProductosGlobal.find(p => p.id == idProducto);
     if (!producto) return;
@@ -179,13 +169,13 @@ function actualizarCarritoUI() {
             contenidoHtml += `
                 <div class="cart-item-row">
                     <div>
-                        <strong style="font-size: 0.95rem; color: #222;">${item.nombre}</strong><br>
-                        <small style="color: #666; font-size: 0.8rem;">$${item.precioUSD.toFixed(2)} c/u</small>
+                        <div class="cart-item-name">${item.nombre}</div>
+                        <div class="cart-item-price">$${item.precioUSD.toFixed(2)} c/u</div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 26px; height: 26px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;">-</button>
-                        <span style="font-size: 1rem; font-weight: 800; color: #1b5e20; min-width: 18px; text-align: center;">${item.cantidad}</span>
-                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 26px; height: 26px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;">+</button>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
+                        <span style="font-size: 1.2rem; font-weight: 900; color: #1b5e20; min-width: 22px; text-align: center;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">+</button>
                     </div>
                 </div>
             `;
@@ -226,6 +216,3 @@ function enviarPedidoWhatsApp() {
     const numeroWhatsApp = "584120000000"; 
     window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
 }
-
-// Ejecutar al iniciar
-obtenerProductos();

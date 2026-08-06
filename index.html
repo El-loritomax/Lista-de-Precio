@@ -8,20 +8,17 @@
 </head>
 <body>
 
-    <!-- Encabezado Principal -->
     <header class="header">
         <h1>PRECIOS ACTUALIZADOS</h1>
         <p class="update-tag">Última actualización: Hoy</p>
     </header>
 
-    <!-- CONTENEDOR PRINCIPAL -->
     <div id="mainLayout" class="main-layout center-mode">
 
-        <!-- COLUMNA PRINCIPAL DE LA TABLA -->
         <div class="content-center">
             <section class="controls-container">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto (ej: harina, aceite)..." onkeyup="filterProducts()">
+                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto (ej: chocolate, galletas)..." onkeyup="filterProducts()">
                 </div>
                 
                 <div class="category-buttons">
@@ -30,6 +27,7 @@
                     <button class="btn-cat" onclick="filterCategory('charcuteria')">Charcutería</button>
                     <button class="btn-cat" onclick="filterCategory('verduras')">Verduras</button>
                     <button class="btn-cat" onclick="filterCategory('refrescos')">Refrescos</button>
+                    <button class="btn-cat" onclick="filterCategory('chucherias')">Chucherías</button>
                     <button class="btn-cat" onclick="filterCategory('helados')">Helados</button>
                 </div>
             </section>
@@ -55,7 +53,6 @@
             </div>
         </div>
 
-        <!-- BARRA LATERAL DEL CARRITO (OCULTA POR DEFECTO) -->
         <aside id="cartSidebar" class="cart-sidebar" style="display: none;">
             <div class="cart-header">
                 <h3>🛒 Tu Pedido</h3>
@@ -63,7 +60,6 @@
             </div>
             
             <div id="lista-carrito" class="cart-items-container">
-                <!-- Se llena dinámicamente -->
             </div>
 
             <div class="cart-footer">
@@ -91,7 +87,6 @@
         <p>Los precios están sujetos a cambios sin previo aviso.</p>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 
