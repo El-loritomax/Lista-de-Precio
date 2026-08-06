@@ -48,7 +48,7 @@ const SUPABASE_URL = "https://lswunozbkpfymbrreqjn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_sIR7w5x-o3ZDl9MlgaWgWg_QLqdiF0b";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. Obtener tasa del BCV con proxy
+// Obtener tasa del BCV automáticamente con proxy
 async function obtenerTasaBCV() {
     try {
         const urlApi = encodeURIComponent('https://ve.dolarapi.com/v1/dolares/oficial');
@@ -73,7 +73,7 @@ async function obtenerTasaBCV() {
     }
 }
 
-// 2. Obtener productos y renderizar
+// Obtener productos y renderizar
 async function obtenerProductos() {
     if (tasaBCV === 0) {
         await obtenerTasaBCV();
@@ -220,7 +220,6 @@ function enviarPedidoWhatsApp() {
     mensaje += `%0A*Total Bs:* Bs. ${totalBs.toFixed(2)}`;
     mensaje += `%0A_(Tasa BCV: Bs. ${tasaBCV.toFixed(2)})_`;
 
-    // Reemplaza con tu número de teléfono de WhatsApp (incluyendo código de país, ej: 58412...)
     const numeroWhatsApp = "584120000000"; 
     window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
 }
