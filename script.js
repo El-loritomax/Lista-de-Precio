@@ -47,11 +47,14 @@ const SUPABASE_URL = "https://lswunozbkpfymbrreqjn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_sIR7w5x-o3ZDl9MlgaWgWg_QLqdiF0b";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. Función para obtener la tasa del BCV en tiempo real
+// 1. Función para obtener la tasa del BCV de forma automática y sin bloqueos
 async function obtenerTasaBCV() {
     try {
-        const respuesta = await fetch("https://ve.dolarapi.com/v1/dolares/oficial");
-        const datos = await respuesta.json();
+        // Usamos un proxy seguro para evitar bloqueos de CORS en GitHub Pages
+        const urlApi = encodeURIComponent('https://ve.dolarapi.com/v1/dolares/oficial');
+        const respuesta = await fetch(`https://api.allorigins.win/get?url=${urlApi}`);
+        const data = await respuesta.json();
+        const datos = JSON.parse(data.contents);
         
         tasaBCV = datos.promedio;
         console.log("Tasa BCV cargada con éxito:", tasaBCV, "Bs/$");
@@ -61,8 +64,8 @@ async function obtenerTasaBCV() {
             elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)}`;
         }
     } catch (error) {
-        console.error("Error al obtener la tasa del BCV:", error);
-        tasaBCV = 36.50; 
+        console.error("Error al obtener la tasa del BCV, usando respaldo:", error);
+        tasaBCV = 755.16; // Tasa de respaldo aproximada actual
         const elTasa = document.getElementById("tasa-dolar");
         if (elTasa) {
             elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)} (Aproximada)`;
@@ -93,7 +96,7 @@ async function obtenerProductos() {
         data.forEach(producto => {
             const fila = document.createElement('tr');
 
-            // Categoría limpia (ej: 'refrescos' o 'helados')
+            // Categoría limpia (ej: 'viveres', 'charcuteria', 'refrescos', 'helados')
             const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
             fila.className = `product-row ${catClase}`;
 
