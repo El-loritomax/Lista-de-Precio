@@ -6,9 +6,10 @@
 }
 
 body {
-    background-color: #f4f6f8;
+    background: linear-gradient(135deg, #f4f6f8 0%, #e9ecef 100%);
     color: #333;
-    padding-bottom: 50px;
+    padding-bottom: 60px;
+    min-height: 100vh;
 }
 
 .container {
@@ -17,80 +18,101 @@ body {
     padding: 2rem;
 }
 
+/* Encabezado con un toque más elegante y degradado */
 .header {
-    background-color: #1b5e20;
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
     color: white;
     text-align: center;
-    padding: 20px 15px;
+    padding: 25px 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .update-tag {
     font-size: 0.85rem;
-    margin-top: 5px;
+    margin-top: 6px;
     opacity: 0.9;
+    background: rgba(255, 255, 255, 0.15);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
 }
 
 .controls-container {
     max-width: 800px;
-    margin: 15px auto;
+    margin: 20px auto;
     padding: 0 15px;
 }
 
+/* Barra de búsqueda mejorada, con sombra y mejor presencia */
 .search-box input {
     width: 100%;
-    padding: 12px 15px;
-    font-size: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
     outline: none;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
 }
 
 .search-box input:focus {
-    border-color: #1b5e20;
+    border-color: #2e7d32;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.15);
 }
 
+/* Botones de categoría con mejor diseño y efecto flotante */
 .category-buttons {
     display: flex;
-    gap: 8px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 15px;
     overflow-x: auto;
-    padding-bottom: 5px;
+    padding-bottom: 8px;
 }
 
 .btn-cat {
-    background-color: #e0e0e0;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
+    color: #555;
+    padding: 9px 18px;
+    border-radius: 25px;
     font-size: 0.9rem;
     cursor: pointer;
     white-space: nowrap;
     font-weight: 600;
-    transition: background-color 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
 }
 
 .btn-cat:hover {
-    background-color: #d0d0d0;
+    background-color: #f1f3f5;
+    border-color: #bcbcbc;
+    transform: translateY(-1px);
 }
 
 .btn-cat.active {
     background-color: #2e7d32;
     color: white;
+    border-color: #2e7d32;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
 }
 
+/* Contenedor de la tabla más moderno */
 .table-container {
     max-width: 800px;
-    margin: 10px auto;
-    padding: 0 15px;
+    margin: 15px auto;
+    padding: 0;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     overflow-x: auto;
+    border: 1px solid #eaeaea;
 }
 
 table {
@@ -100,30 +122,33 @@ table {
 }
 
 th, td {
-    padding: 14px 12px;
-    border-bottom: 1px solid #eee;
+    padding: 16px 14px;
+    border-bottom: 1px solid #f1f3f5;
     vertical-align: middle;
 }
 
 th {
     background-color: #f8f9fa;
-    color: #555;
+    color: #495057;
     font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .product-name {
     font-weight: 600;
+    color: #212529;
 }
 
 .price {
     font-weight: 700;
     color: #1b5e20;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
 }
 
 .badge {
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 600;
 }
@@ -134,7 +159,7 @@ th {
 
 .footer {
     text-align: center;
-    margin-top: 25px;
-    font-size: 0.8rem;
-    color: #777;
+    margin-top: 30px;
+    font-size: 0.85rem;
+    color: #888;
 }
