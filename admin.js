@@ -14,20 +14,28 @@ const btnLogout = document.getElementById('btn-logout');
 async function verificarSesion() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
-        loginSection.style.display = 'none';
-        adminPanel.style.display = 'block';
+        if (loginSection) loginSection.style.display = 'none';
+        if (adminPanel) adminPanel.style.display = 'block';
     } else {
-        loginSection.style.display = 'block';
-        adminPanel.style.display = 'none';
+        if (loginSection) loginSection.style.display = 'block';
+        if (adminPanel) adminPanel.style.display = 'none';
     }
 }
 
 // Función para iniciar sesión al hacer clic en Entrar
 if (btnLogin) {
     btnLogin.addEventListener('click', async () => {
-        // Obtenemos los valores de los inputs de correo y contraseña
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        // Usamos los IDs exactos que tienes en tu HTML: admin-email y admin-password
+        const emailInput = document.getElementById('admin-email');
+        const passwordInput = document.getElementById('admin-password');
+
+        if (!emailInput || !passwordInput) {
+            alert('No se encontraron los campos de correo o contraseña.');
+            return;
+        }
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
 
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
