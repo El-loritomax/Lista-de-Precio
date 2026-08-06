@@ -18,7 +18,6 @@ body {
     padding: 2rem;
 }
 
-/* Encabezado con un toque más elegante y degradado */
 .header {
     background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
     color: white;
@@ -49,7 +48,6 @@ body {
     padding: 0 15px;
 }
 
-/* Barra de búsqueda mejorada, con sombra y mejor presencia */
 .search-box input {
     width: 100%;
     padding: 14px 20px;
@@ -67,7 +65,6 @@ body {
     box-shadow: 0 4px 15px rgba(46, 125, 50, 0.15);
 }
 
-/* Botones de categoría con mejor diseño y efecto flotante */
 .category-buttons {
     display: flex;
     gap: 10px;
@@ -103,7 +100,6 @@ body {
     box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
 }
 
-/* Contenedor de la tabla más moderno */
 .table-container {
     max-width: 800px;
     margin: 15px auto;
