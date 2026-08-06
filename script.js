@@ -56,14 +56,13 @@ async function obtenerTasaBCV() {
         tasaBCV = datos.promedio;
         console.log("Tasa BCV cargada con éxito:", tasaBCV, "Bs/$");
 
-        // Actualizamos el texto de la tasa en el HTML con el ID correcto
         const elTasa = document.getElementById("tasa-dolar");
         if (elTasa) {
             elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)}`;
         }
     } catch (error) {
         console.error("Error al obtener la tasa del BCV:", error);
-        tasaBCV = 36.50; // Respaldo por si falla la red
+        tasaBCV = 36.50; 
         const elTasa = document.getElementById("tasa-dolar");
         if (elTasa) {
             elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)} (Aproximada)`;
@@ -71,9 +70,8 @@ async function obtenerTasaBCV() {
     }
 }
 
-// 2. Función principal unificada para obtener productos y calcular sus precios
+// 2. Función principal para obtener productos y calcular sus precios
 async function obtenerProductos() {
-    // Asegurarnos de tener la tasa antes de pintar los productos
     if (tasaBCV === 0) {
         await obtenerTasaBCV();
     }
@@ -95,11 +93,11 @@ async function obtenerProductos() {
         data.forEach(producto => {
             const fila = document.createElement('tr');
 
-            // Categoría limpia
+            // Categoría limpia (ej: 'refrescos' o 'helados')
             const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
             fila.className = `product-row ${catClase}`;
 
-            // Cálculo en Bolívares (Precio en USD * Tasa BCV)
+            // Cálculo en Bolívares
             const precioUSD = parseFloat(producto.precio) || 0;
             const precioBs = (precioUSD * tasaBCV).toFixed(2);
 
