@@ -37,8 +37,9 @@
                 <tr>
                     <th>Producto</th>
                     <th>Presentación</th>
-                    <th>Precio (BS)</th>
+                    <th>Precio</th>
                     <th>Estado</th>
+                    <th>Acción</th> <!-- Columna para el botón de agregar -->
                 </tr>
             </thead>
             <tbody>
@@ -47,8 +48,37 @@
     </main>
 
     <!-- Indicador de la Tasa del Dólar -->
-    <div style="text-align: center; margin: 15px 0; font-size: 0.95rem; color: #333;">
+    <div style="text-align: center; margin: 25px 0 70px 0; font-size: 0.95rem; color: #333;">
         Tasa del dólar oficial: <span id="tasa-dolar" style="font-weight: bold; color: #2e7d32;">Cargando...</span>
+    </div>
+
+    <!-- BOTÓN FLOTANTE DEL CARRITO -->
+    <div id="carrito-flotante" onclick="toggleModalCarrito()" style="position: fixed; bottom: 20px; right: 20px; background-color: #2e7d32; color: white; padding: 12px 20px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; z-index: 1000; display: flex; align-items: center; gap: 8px;">
+        🛒 Ver Pedido (<span id="carrito-contador">0</span>)
+    </div>
+
+    <!-- MODAL / VENTANA FLOTANTE DEL CARRITO -->
+    <div id="modal-carrito" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001; justify-content: center; align-items: center;">
+        <div style="background: white; width: 90%; max-width: 500px; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                <h3 style="margin: 0; color: #333;">Tu Pedido Actual</h3>
+                <button onclick="toggleModalCarrito()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+            
+            <div id="lista-carrito" style="margin: 15px 0; max-height: 40vh; overflow-y: auto;">
+                <p style="color: #666; text-align: center;">El carrito está vacío</p>
+            </div>
+
+            <div style="border-top: 1px solid #ddd; padding-top: 15px; text-align: right;">
+                <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Total USD:</strong> $<span id="carrito-total-usd">0.00</span></p>
+                <p style="margin: 5px 0; font-size: 1.1rem; color: #2e7d32;"><strong>Total Bs:</strong> Bs. <span id="carrito-total-bs">0.00</span></p>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="vaciarCarrito()" style="flex: 1; background: #d32f2f; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold;">Vaciar</button>
+                <button onclick="enviarPedidoWhatsApp()" style="flex: 2; background: #25d366; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold;">Enviar por WhatsApp</button>
+            </div>
+        </div>
     </div>
 
     <footer class="footer">

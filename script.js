@@ -1,5 +1,6 @@
-// Variable global para almacenar la tasa del BCV
 let tasaBCV = 0;
+let carrito = [];
+let listaProductosGlobal = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     const title = document.querySelector('h1');
@@ -47,25 +48,24 @@ const SUPABASE_URL = "https://lswunozbkpfymbrreqjn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_sIR7w5x-o3ZDl9MlgaWgWg_QLqdiF0b";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. Función para obtener la tasa del BCV de forma automática y sin bloqueos
+// 1. Obtener tasa del BCV con proxy
 async function obtenerTasaBCV() {
     try {
-        // Usamos un proxy seguro para evitar bloqueos de CORS en GitHub Pages
         const urlApi = encodeURIComponent('https://ve.dolarapi.com/v1/dolares/oficial');
         const respuesta = await fetch(`https://api.allorigins.win/get?url=${urlApi}`);
         const data = await respuesta.json();
         const datos = JSON.parse(data.contents);
         
         tasaBCV = datos.promedio;
-        console.log("Tasa BCV cargada con éxito:", tasaBCV, "Bs/$");
+        console.log("Tasa BCV cargada:", tasaBCV);
 
         const elTasa = document.getElementById("tasa-dolar");
         if (elTasa) {
             elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)}`;
         }
     } catch (error) {
-        console.error("Error al obtener la tasa del BCV, usando respaldo:", error);
-        tasaBCV = 755.16; // Tasa de respaldo aproximada actual
+        console.error("Error al obtener tasa, usando respaldo:", error);
+        tasaBCV = 36.50; 
         const elTasa = document.getElementById("tasa-dolar");
         if (elTasa) {
             elTasa.textContent = `Bs. ${tasaBCV.toFixed(2)} (Aproximada)`;
@@ -73,7 +73,7 @@ async function obtenerTasaBCV() {
     }
 }
 
-// 2. Función principal para obtener productos y calcular sus precios
+// 2. Obtener productos y renderizar
 async function obtenerProductos() {
     if (tasaBCV === 0) {
         await obtenerTasaBCV();
@@ -84,10 +84,9 @@ async function obtenerProductos() {
         .select('*');
 
     if (error) {
-        console.error("Error de conexión con Supabase:", error);
+        console.error("Error en Supabase:", error);
     } else {
-        console.log("¡Conectado con éxito! Productos:", data);
-
+        listaProductosGlobal = data;
         const tablaBody = document.querySelector('tbody');
         if (!tablaBody) return;
 
@@ -95,12 +94,9 @@ async function obtenerProductos() {
 
         data.forEach(producto => {
             const fila = document.createElement('tr');
-
-            // Categoría limpia (ej: 'viveres', 'charcuteria', 'refrescos', 'helados')
             const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
             fila.className = `product-row ${catClase}`;
 
-            // Cálculo en Bolívares
             const precioUSD = parseFloat(producto.precio) || 0;
             const precioBs = (precioUSD * tasaBCV).toFixed(2);
 
@@ -112,6 +108,9 @@ async function obtenerProductos() {
                     <small style="display:block; color: #666; font-size: 0.85em;">(Bs. ${precioBs})</small>
                 </td>
                 <td><span class="badge in-stock">${producto.estado || 'Disponible'}</span></td>
+                <td>
+                    <button onclick="agregarAlCarrito('${producto.id}')" style="background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">+ Agregar</button>
+                </td>
             `;
 
             tablaBody.appendChild(fila);
@@ -119,5 +118,112 @@ async function obtenerProductos() {
     }
 }
 
-// Ejecutamos la carga al iniciar
+// --- FUNCIONES DEL CARRITO ---
+function agregarAlCarrito(idProducto) {
+    const producto = listaProductosGlobal.find(p => p.id == idProducto);
+    if (!producto) return;
+
+    const enCarrito = carrito.find(item => item.id == idProducto);
+    if (enCarrito) {
+        enCarrito.cantidad += 1;
+    } else {
+        carrito.push({
+            id: producto.id,
+            nombre: producto.nombre,
+            presentacion: producto.presentacion || '',
+            precioUSD: parseFloat(producto.precio) || 0,
+            cantidad: 1
+        });
+    }
+
+    actualizarCarritoUI();
+}
+
+function cambiarCantidad(idProducto, cambio) {
+    const item = carrito.find(i => i.id == idProducto);
+    if (item) {
+        item.cantidad += cambio;
+        if (item.cantidad <= 0) {
+            carrito = carrito.filter(i => i.id != idProducto);
+        }
+    }
+    actualizarCarritoUI();
+}
+
+function actualizarCarritoUI() {
+    const contador = document.getElementById('carrito-contador');
+    const listaHtml = document.getElementById('lista-carrito');
+    const totalUsdEl = document.getElementById('carrito-total-usd');
+    const totalBsEl = document.getElementById('carrito-total-bs');
+
+    let totalItems = 0;
+    let totalUsd = 0;
+    let contenidoHtml = '';
+
+    if (carrito.length === 0) {
+        contenidoHtml = '<p style="color: #666; text-align: center;">El carrito está vacío</p>';
+    } else {
+        carrito.forEach(item => {
+            totalItems += item.cantidad;
+            let subtotalUsd = item.precioUSD * item.cantidad;
+            totalUsd += subtotalUsd;
+
+            contenidoHtml += `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                    <div>
+                        <strong>${item.nombre}</strong> <small>(${item.presentacion})</small><br>
+                        <span style="color: #666; font-size: 0.9rem;">$${item.precioUSD.toFixed(2)} c/u</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #ccc; border: none; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
+                        <span>${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    contador.textContent = totalItems;
+    listaHtml.innerHTML = contenidoHtml;
+    totalUsdEl.textContent = totalUsd.toFixed(2);
+    totalBsEl.textContent = (totalUsd * tasaBCV).toFixed(2);
+}
+
+function toggleModalCarrito() {
+    const modal = document.getElementById('modal-carrito');
+    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function vaciarCarrito() {
+    carrito = [];
+    actualizarCarritoUI();
+}
+
+function enviarPedidoWhatsApp() {
+    if (carrito.length === 0) {
+        alert("Tu carrito está vacío");
+        return;
+    }
+
+    let mensaje = "Hola, ¡quiero hacer el siguiente pedido! 🛒:%0A";
+    let totalUsd = 0;
+
+    carrito.forEach(item => {
+        let subtotal = item.precioUSD * item.cantidad;
+        totalUsd += subtotal;
+        mensaje += `- ${item.cantidad}x ${item.nombre} (${item.presentacion}) - $${subtotal.toFixed(2)}%0A`;
+    });
+
+    let totalBs = totalUsd * tasaBCV;
+    mensaje += `%0A*Total USD:* $${totalUsd.toFixed(2)}`;
+    mensaje += `%0A*Total Bs:* Bs. ${totalBs.toFixed(2)}`;
+    mensaje += `%0A_(Tasa BCV: Bs. ${tasaBCV.toFixed(2)})_`;
+
+    // Reemplaza con tu número de teléfono de WhatsApp (incluyendo código de país, ej: 58412...)
+    const numeroWhatsApp = "584120000000"; 
+    window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
+}
+
+// Ejecutar al iniciar
 obtenerProductos();
