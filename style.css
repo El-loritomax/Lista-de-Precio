@@ -11,6 +11,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-bottom: 70px; /* Espacio para que la barra móvil no tape el contenido */
 }
 
 .header {
@@ -115,21 +116,15 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .product-img-container {
     width: 100%;
-    height: 140px;
+    height: 130px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .product-img {
@@ -154,11 +149,11 @@ body {
 .product-presentation {
     font-size: 0.8rem;
     color: #777;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .price-container {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     background: #fafafa;
     padding: 8px;
     border-radius: 8px;
@@ -166,7 +161,7 @@ body {
 }
 
 .price-usd {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 800;
     color: #e65100;
 }
@@ -178,6 +173,7 @@ body {
     display: block;
 }
 
+/* Botón agregar simple o contador integrado estilo App */
 .btn-agregar {
     background: #f57c00;
     color: white;
@@ -193,6 +189,33 @@ body {
 
 .btn-agregar:hover {
     background: #e65100;
+}
+
+/* Controles de cantidad en tarjeta (- 1 +) */
+.card-counter-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f57c00;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-counter-box button {
+    background: #e65100;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.card-counter-box span {
+    color: white;
+    font-weight: 900;
+    font-size: 1.1rem;
 }
 
 .tasa-box {
@@ -211,7 +234,7 @@ body {
     font-size: 1.15rem;
 }
 
-/* Sidebar del Carrito */
+/* Sidebar del Carrito (Escritorio) */
 .cart-sidebar {
     width: 380px;
     background: white;
@@ -344,6 +367,71 @@ body {
     font-weight: bold;
     flex: 2;
     font-size: 0.95rem;
+}
+
+/* Barra inferior flotante móvil (Estilo App) */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #f57c00;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+    z-index: 1000;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.nav-item {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    font-weight: 600;
+}
+
+.nav-item i {
+    font-size: 1.3rem;
+    margin-bottom: 3px;
+}
+
+.nav-item.active {
+    color: #fff;
+    opacity: 1;
+}
+
+.mobile-badge {
+    position: absolute;
+    top: -5px;
+    right: 25%;
+    background: white;
+    color: #e65100;
+    font-size: 0.7rem;
+    font-weight: 900;
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+/* Mostrar la barra inferior solo en pantallas de teléfono */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        display: flex;
+    }
+    .cart-sidebar {
+        /* En celulares, si abren el carrito, ocupa pantalla completa o estilo modal inferior */
+        position: fixed !important;
+        top: 10% !important;
+        left: 5% !important;
+        width: 90% !important;
+        max-height: 80vh !important;
+        z-index: 1100;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
 }
 
 .footer {

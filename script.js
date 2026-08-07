@@ -40,17 +40,17 @@ async function obtenerProductos() {
         console.error("Error al conectar con Supabase:", error);
     } else {
         listaProductosGlobal = data || [];
-        renderizarTarjetas(listaProductosGlobal);
+        renderizarTarjetas();
     }
 }
 
-function renderizarTarjetas(productos) {
+function renderizarTarjetas() {
     const gridContainer = document.getElementById('productsGrid');
     if (!gridContainer) return;
 
     gridContainer.innerHTML = '';
 
-    productos.forEach(producto => {
+    listaProductosGlobal.forEach(producto => {
         const tarjeta = document.createElement('div');
         const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
         tarjeta.className = `product-card ${catClase}`;
@@ -61,6 +61,22 @@ function renderizarTarjetas(productos) {
         const imagenUrl = producto.imagen && producto.imagen.trim() !== '' 
             ? producto.imagen 
             : 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?w=200&auto=format&fit=crop&q=60';
+
+        // Verificamos si este producto ya está en el carrito para mostrar el botón o el contador - 1 +
+        const enCarrito = carrito.find(item => item.id == producto.id);
+        let botonAccionHtml = '';
+
+        if (!enCarrito) {
+            botonAccionHtml = `<button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">Agregar</button>`;
+        } else {
+            botonAccionHtml = `
+                <div class="card-counter-box">
+                    <button onclick="cambiarCantidad('${producto.id}', -1)">-</button>
+                    <span>${enCarrito.cantidad}</span>
+                    <button onclick="cambiarCantidad('${producto.id}', 1)">+</button>
+                </div>
+            `;
+        }
 
         tarjeta.innerHTML = `
             <div>
@@ -74,7 +90,7 @@ function renderizarTarjetas(productos) {
                     <span class="price-bs">Bs. ${precioBs}</span>
                 </div>
             </div>
-            <button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">Agregar</button>
+            ${botonAccionHtml}
         `;
 
         gridContainer.appendChild(tarjeta);
@@ -133,6 +149,7 @@ function agregarAlCarrito(idProducto) {
     }
 
     actualizarCarritoUI();
+    renderizarTarjetas(); // Re-renderiza para mostrar el control - 1 + en la tarjeta
 }
 
 function cambiarCantidad(idProducto, cambio) {
@@ -144,12 +161,14 @@ function cambiarCantidad(idProducto, cambio) {
         }
     }
     actualizarCarritoUI();
+    renderizarTarjetas();
 }
 
 function actualizarCarritoUI() {
     const mainLayout = document.getElementById('mainLayout');
     const cartSidebar = document.getElementById('cartSidebar');
     const contadorBadge = document.getElementById('carrito-contador-badge');
+    const mobileBadge = document.getElementById('mobile-badge');
     const listaHtml = document.getElementById('lista-carrito');
     const totalUsdEl = document.getElementById('carrito-total-usd');
     const totalBsEl = document.getElementById('carrito-total-bs');
@@ -161,6 +180,7 @@ function actualizarCarritoUI() {
     if (carrito.length === 0) {
         cartSidebar.style.display = 'none';
         mainLayout.classList.remove('with-cart');
+        if (mobileBadge) mobileBadge.style.display = 'none';
     } else {
         cartSidebar.style.display = 'flex';
         mainLayout.classList.add('with-cart');
@@ -184,6 +204,11 @@ function actualizarCarritoUI() {
                 </div>
             `;
         });
+
+        if (mobileBadge) {
+            mobileBadge.textContent = totalItems;
+            mobileBadge.style.display = 'inline-block';
+        }
     }
 
     contadorBadge.textContent = totalItems;
@@ -192,9 +217,25 @@ function actualizarCarritoUI() {
     totalBsEl.textContent = (totalUsd * tasaBCV).toFixed(2);
 }
 
+function abrirCarritoMovil() {
+    const cartSidebar = document.getElementById('cartSidebar');
+    if (carrito.length === 0) {
+        alert("Tu carrito está vacío");
+        return;
+    }
+    // En móviles, hacemos scroll arriba o alternamos visibilidad del carrito flotante
+    if (cartSidebar.style.display === 'flex') {
+        cartSidebar.style.display = 'none';
+    } else {
+        cartSidebar.style.display = 'flex';
+        cartSidebar.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 function vaciarCarrito() {
     carrito = [];
     actualizarCarritoUI();
+    renderizarTarjetas();
 }
 
 function enviarPedidoWhatsApp() {

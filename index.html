@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Precios e Inventario</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Iconos para la barra móvil -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -18,7 +20,7 @@
         <div class="content-center">
             <section class="controls-container">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto (ej: galleta, mayonesa)..." onkeyup="filterProducts()">
+                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto..." onkeyup="filterProducts()">
                 </div>
                 
                 <div class="category-buttons">
@@ -32,9 +34,9 @@
                 </div>
             </section>
 
-            <!-- Contenedor en cuadrícula de tarjetas -->
+            <!-- Cuadrícula de Tarjetas -->
             <main class="grid-container" id="productsGrid">
-                <!-- Los productos se cargan dinámicamente aquí -->
+                <!-- Se llena dinámicamente con JavaScript -->
             </main>
 
             <div class="tasa-box">
@@ -42,6 +44,7 @@
             </div>
         </div>
 
+        <!-- Carrito Lateral (PC) -->
         <aside id="cartSidebar" class="cart-sidebar" style="display: none;">
             <div class="cart-header">
                 <h3>🛒 Tu Pedido</h3>
@@ -71,6 +74,19 @@
         </aside>
 
     </div>
+
+    <!-- Barra de navegación inferior móvil (Estilo App) -->
+    <nav class="mobile-bottom-nav">
+        <a href="#" class="nav-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+            <i class="fa-solid fa-house"></i>
+            <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item" onclick="abrirCarritoMovil(); return false;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>Carrito</span>
+            <span id="mobile-badge" class="mobile-badge" style="display: none;">0</span>
+        </a>
+    </nav>
 
     <footer class="footer">
         <p>Los precios están sujetos a cambios sin previo aviso.</p>
