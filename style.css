@@ -14,7 +14,7 @@ body {
 }
 
 .header {
-    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+    background: linear-gradient(135deg, #e65100 0%, #f57c00 100%);
     color: white;
     text-align: center;
     padding: 22px 15px;
@@ -38,7 +38,7 @@ body {
 
 .main-layout {
     display: flex;
-    max-width: 950px;
+    max-width: 1100px;
     width: 100%;
     margin: 25px auto;
     padding: 0 15px;
@@ -48,7 +48,7 @@ body {
 }
 
 .main-layout.with-cart {
-    max-width: 1300px;
+    max-width: 1350px;
 }
 
 .content-center {
@@ -56,7 +56,7 @@ body {
 }
 
 .controls-container {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .search-box input {
@@ -70,7 +70,7 @@ body {
 }
 
 .search-box input:focus {
-    border-color: #2e7d32;
+    border-color: #f57c00;
 }
 
 .category-buttons {
@@ -94,81 +94,105 @@ body {
 }
 
 .btn-cat.active {
-    background-color: #2e7d32;
+    background-color: #f57c00;
     color: white;
-    border-color: #2e7d32;
+    border-color: #f57c00;
 }
 
-.table-container {
+/* Cuadrícula de Tarjetas */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 18px;
+}
+
+.product-card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    overflow-x: auto;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid #eaeaea;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-table {
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.product-img-container {
     width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-th, td {
-    padding: 16px 14px;
-    border-bottom: 1px solid #f1f3f5;
-    vertical-align: middle;
-}
-
-th {
-    background-color: #f8f9fa;
-    color: #495057;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    font-weight: 700;
+.product-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .product-name {
     font-weight: 700;
     color: #212529;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    min-height: 38px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-presentation {
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 8px;
 }
 
 .price-container {
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 12px;
+    background: #fafafa;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #f1f1f1;
 }
 
 .price-usd {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 800;
-    color: #1b5e20;
+    color: #e65100;
 }
 
 .price-bs {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 700;
     color: #d32f2f;
-    margin-top: 2px;
+    display: block;
 }
-
-.badge {
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.in-stock { background-color: #e8f5e9; color: #2e7d32; }
 
 .btn-agregar {
-    background: #2e7d32;
+    background: #f57c00;
     color: white;
     border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 10px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     font-size: 0.9rem;
+    width: 100%;
+    transition: background 0.2s;
+}
+
+.btn-agregar:hover {
+    background: #e65100;
 }
 
 .tasa-box {
@@ -183,12 +207,13 @@ th {
 
 #tasa-dolar {
     font-weight: 900;
-    color: #1b5e20;
+    color: #e65100;
     font-size: 1.15rem;
 }
 
+/* Sidebar del Carrito */
 .cart-sidebar {
-    width: 400px;
+    width: 380px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -202,7 +227,7 @@ th {
 }
 
 .cart-header {
-    background-color: #1b5e20;
+    background-color: #e65100;
     color: white;
     padding: 16px;
     border-top-left-radius: 12px;
@@ -214,7 +239,7 @@ th {
 
 .badge-count {
     background: white;
-    color: #1b5e20;
+    color: #e65100;
     padding: 3px 10px;
     border-radius: 12px;
     font-weight: 900;
@@ -237,14 +262,14 @@ th {
 }
 
 .cart-item-name {
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 800;
     color: #1a1a1a;
 }
 
 .cart-item-price {
-    color: #2e7d32;
-    font-size: 1rem;
+    color: #e65100;
+    font-size: 0.9rem;
     font-weight: 700;
     margin-top: 3px;
 }
@@ -259,17 +284,17 @@ th {
 
 .cart-totals {
     margin-bottom: 15px;
-    background: #f1f8e9;
+    background: #fff3e0;
     padding: 12px;
     border-radius: 8px;
-    border: 1px solid #c8e6c9;
+    border: 1px solid #ffe0b2;
 }
 
 .total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: #333;
     font-weight: 600;
 }
@@ -277,17 +302,17 @@ th {
 .bs-row {
     margin-top: 6px;
     padding-top: 6px;
-    border-top: 1px dashed #c8e6c9;
+    border-top: 1px dashed #ffe0b2;
 }
 
 .highlight-price-usd {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 900;
-    color: #1b5e20;
+    color: #e65100;
 }
 
 .highlight-price-bs {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 900;
     color: #d32f2f;
 }
@@ -306,7 +331,7 @@ th {
     cursor: pointer;
     font-weight: bold;
     flex: 1;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .btn-whatsapp {
@@ -318,7 +343,7 @@ th {
     cursor: pointer;
     font-weight: bold;
     flex: 2;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .footer {

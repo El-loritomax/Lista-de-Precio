@@ -20,7 +20,7 @@ async function obtenerTasaEstableYProductos() {
             }
         }
     } catch (e) {
-        console.warn("Usando tasa de respaldo por fallo de red.");
+        console.warn("Usando tasa de respaldo.");
     }
 
     const elTasa = document.getElementById("tasa-dolar");
@@ -40,72 +40,76 @@ async function obtenerProductos() {
         console.error("Error al conectar con Supabase:", error);
     } else {
         listaProductosGlobal = data || [];
-        renderizarTabla(listaProductosGlobal);
+        renderizarTarjetas(listaProductosGlobal);
     }
 }
 
-function renderizarTabla(productos) {
-    const tablaBody = document.querySelector('tbody');
-    if (!tablaBody) return;
+function renderizarTarjetas(productos) {
+    const gridContainer = document.getElementById('productsGrid');
+    if (!gridContainer) return;
 
-    tablaBody.innerHTML = '';
+    gridContainer.innerHTML = '';
 
     productos.forEach(producto => {
-        const fila = document.createElement('tr');
+        const tarjeta = document.createElement('div');
         const catClase = producto.categoria ? producto.categoria.toLowerCase().trim() : 'viveres';
-        fila.className = `product-row ${catClase}`;
+        tarjeta.className = `product-card ${catClase}`;
 
         const precioUSD = parseFloat(producto.precio) || 0;
         const precioBs = (precioUSD * tasaBCV).toFixed(2);
+        
+        const imagenUrl = producto.imagen && producto.imagen.trim() !== '' 
+            ? producto.imagen 
+            : 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?w=200&auto=format&fit=crop&q=60';
 
-        fila.innerHTML = `
-            <td class="product-name">${producto.nombre || 'Sin nombre'}</td>
-            <td>${producto.presentacion || '1 Kilo / Kg'}</td>
-            <td>
+        tarjeta.innerHTML = `
+            <div>
+                <div class="product-img-container">
+                    <img src="${imagenUrl}" alt="${producto.nombre}" class="product-img">
+                </div>
+                <div class="product-name">${producto.nombre || 'Sin nombre'}</div>
+                <div class="product-presentation">${producto.presentacion || 'Unidad'}</div>
                 <div class="price-container">
                     <span class="price-usd">$${precioUSD.toFixed(2)}</span>
                     <span class="price-bs">Bs. ${precioBs}</span>
                 </div>
-            </td>
-            <td><span class="badge in-stock">${producto.estado || 'Disponible'}</span></td>
-            <td>
-                <button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">+ Agregar</button>
-            </td>
+            </div>
+            <button class="btn-agregar" onclick="agregarAlCarrito('${producto.id}')">Agregar</button>
         `;
 
-        tablaBody.appendChild(fila);
+        gridContainer.appendChild(tarjeta);
     });
 }
 
 function filterProducts() {
     let input = document.getElementById("searchInput").value.toLowerCase();
-    let rows = document.querySelectorAll(".product-row");
+    let cards = document.querySelectorAll(".product-card");
 
-    rows.forEach(row => {
-        let productName = row.querySelector(".product-name").innerText.toLowerCase();
+    cards.forEach(card => {
+        let productName = card.querySelector(".product-name").innerText.toLowerCase();
         if (productName.includes(input)) {
-            row.style.display = "";
+            card.style.display = "";
         } else {
-            row.style.display = "none";
+            card.style.display = "none";
         }
     });
 }
 
 function filterCategory(category) {
-    let rows = document.querySelectorAll(".product-row");
+    let cards = document.querySelectorAll(".product-card");
     let buttons = document.querySelectorAll(".btn-cat");
 
     buttons.forEach(btn => btn.classList.remove("active"));
     event.target.classList.add("active");
 
-    rows.forEach(row => {
+    cards.forEach(card => {
         if (category === "todos") {
-            row.style.display = "";
+            card.style.display = "";
         } else {
-            if (row.classList.contains(category)) {
-                row.style.display = "";
+            if (card.classList.contains(category)) {
+                card.style.display = "";
             } else {
-                row.style.display = "none";
+                card.style.display = "none";
             }
         }
     });
@@ -174,8 +178,8 @@ function actualizarCarritoUI() {
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
-                        <span style="font-size: 1.2rem; font-weight: 900; color: #1b5e20; min-width: 22px; text-align: center;">${item.cantidad}</span>
-                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #2e7d32; color: white; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">+</button>
+                        <span style="font-size: 1.2rem; font-weight: 900; color: #e65100; min-width: 22px; text-align: center;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #f57c00; color: white; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">+</button>
                     </div>
                 </div>
             `;

@@ -18,7 +18,7 @@
         <div class="content-center">
             <section class="controls-container">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto (ej: chocolate, galletas)..." onkeyup="filterProducts()">
+                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto (ej: galleta, mayonesa)..." onkeyup="filterProducts()">
                 </div>
                 
                 <div class="category-buttons">
@@ -32,20 +32,9 @@
                 </div>
             </section>
 
-            <main class="table-container">
-                <table id="priceTable">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Presentación</th>
-                            <th>Precio</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            <!-- Contenedor en cuadrícula de tarjetas -->
+            <main class="grid-container" id="productsGrid">
+                <!-- Los productos se cargan dinámicamente aquí -->
             </main>
 
             <div class="tasa-box">
