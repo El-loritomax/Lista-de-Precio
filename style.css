@@ -173,7 +173,6 @@ body {
     display: block;
 }
 
-/* Botón agregar simple o contador integrado estilo App */
 .btn-agregar {
     background: #f57c00;
     color: white;
@@ -191,7 +190,6 @@ body {
     background: #e65100;
 }
 
-/* Controles de cantidad en tarjeta (- 1 +) */
 .card-counter-box {
     display: flex;
     align-items: center;
@@ -369,7 +367,7 @@ body {
     font-size: 0.95rem;
 }
 
-/* Barra inferior flotante móvil (Estilo App) */
+/* Barra inferior flotante móvil */
 .mobile-bottom-nav {
     display: none;
     position: fixed;
@@ -417,20 +415,125 @@ body {
     border-radius: 10px;
 }
 
+/* Estilos de la vista móvil moderna de carrito (Modal a pantalla completa) */
+.mobile-cart-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #f8fafc;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInModal 0.25s ease-in-out;
+}
+
+.mobile-cart-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-cart-header h2 {
+    margin-left: 15px;
+    font-size: 1.2rem;
+    color: #1e293b;
+    font-weight: 800;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #1e293b;
+    padding: 5px;
+}
+
+.mobile-cart-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.empty-cart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    color: #64748b;
+    padding: 20px;
+}
+
+.empty-cart-icon {
+    width: 100px;
+    height: 100px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #f97316;
+    box-shadow: 0 10px 25px rgba(249, 115, 22, 0.1);
+    margin-bottom: 20px;
+    border: 2px dashed #fed7aa;
+}
+
+.empty-cart-container h3 {
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+.empty-cart-container p {
+    font-size: 0.95rem;
+    max-width: 280px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+.btn-explore {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.btn-explore:active {
+    transform: scale(0.96);
+}
+
+@keyframes fadeInModal {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
 /* Mostrar la barra inferior solo en pantallas de teléfono */
 @media (max-width: 768px) {
     .mobile-bottom-nav {
         display: flex;
-    }
-    .cart-sidebar {
-        /* En celulares, si abren el carrito, ocupa pantalla completa o estilo modal inferior */
-        position: fixed !important;
-        top: 10% !important;
-        left: 5% !important;
-        width: 90% !important;
-        max-height: 80vh !important;
-        z-index: 1100;
-        box-shadow: 0 0 30px rgba(0,0,0,0.5);
     }
 }
 

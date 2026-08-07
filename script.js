@@ -62,7 +62,6 @@ function renderizarTarjetas() {
             ? producto.imagen 
             : 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?w=200&auto=format&fit=crop&q=60';
 
-        // Verificamos si este producto ya está en el carrito para mostrar el botón o el contador - 1 +
         const enCarrito = carrito.find(item => item.id == producto.id);
         let botonAccionHtml = '';
 
@@ -111,12 +110,14 @@ function filterProducts() {
     });
 }
 
-function filterCategory(category) {
+function filterCategory(category, event) {
     let cards = document.querySelectorAll(".product-card");
     let buttons = document.querySelectorAll(".btn-cat");
 
     buttons.forEach(btn => btn.classList.remove("active"));
-    event.target.classList.add("active");
+    if (event && event.target) {
+        event.target.classList.add("active");
+    }
 
     cards.forEach(card => {
         if (category === "todos") {
@@ -149,7 +150,7 @@ function agregarAlCarrito(idProducto) {
     }
 
     actualizarCarritoUI();
-    renderizarTarjetas(); // Re-renderiza para mostrar el control - 1 + en la tarjeta
+    renderizarTarjetas();
 }
 
 function cambiarCantidad(idProducto, cambio) {
@@ -162,6 +163,22 @@ function cambiarCantidad(idProducto, cambio) {
     }
     actualizarCarritoUI();
     renderizarTarjetas();
+    
+    // Si el modal móvil está abierto, actualizar su contenido dinámicamente
+    const modalMovil = document.getElementById('mobileCartModal');
+    if (modalMovil && modalMovil.style.display === 'flex') {
+        abrirCarritoMovil();
+    }
+}
+
+function vaciarCarrito() {
+    carrito = [];
+    actualizarCarritoUI();
+    renderizarTarjetas();
+    const modalMovil = document.getElementById('mobileCartModal');
+    if (modalMovil && modalMovil.style.display === 'flex') {
+        abrirCarritoMovil();
+    }
 }
 
 function actualizarCarritoUI() {
@@ -211,53 +228,106 @@ function actualizarCarritoUI() {
         }
     }
 
-    contadorBadge.textContent = totalItems;
-    listaHtml.innerHTML = contenidoHtml;
-    totalUsdEl.textContent = totalUsd.toFixed(2);
-    totalBsEl.textContent = (totalUsd * tasaBCV).toFixed(2);
+    if (contadorBadge) contadorBadge.textContent = totalItems;
+    if (listaHtml) listaHtml.innerHTML = contenidoHtml;
+    if (totalUsdEl) totalUsdEl.textContent = totalUsd.toFixed(2);
+    if (totalBsEl) totalBsEl.textContent = (totalUsd * tasaBCV).toFixed(2);
 }
 
 function abrirCarritoMovil() {
-    const cartSidebar = document.getElementById('cartSidebar');
+    const modalMovil = document.getElementById('mobileCartModal');
+    const cuerpoModalMovil = document.getElementById('mobileCartBodyContent');
+    
+    if (!modalMovil || !cuerpoModalMovil) return;
+
     if (carrito.length === 0) {
-        alert("Tu carrito está vacío");
-        return;
-    }
-    // En móviles, hacemos scroll arriba o alternamos visibilidad del carrito flotante
-    if (cartSidebar.style.display === 'flex') {
-        cartSidebar.style.display = 'none';
+        cuerpoModalMovil.innerHTML = `
+            <div class="empty-cart-container">
+                <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-basket"></i>
+                </div>
+                <h3>Tu carrito está vacío</h3>
+                <p>Explora nuestros productos y descubre ofertas increíbles para llevar a casa.</p>
+                <button class="btn-explore" onclick="cerrarCarritoMovil()">Empezar a comprar</button>
+            </div>
+        `;
     } else {
-        cartSidebar.style.display = 'flex';
-        cartSidebar.scrollIntoView({ behavior: 'smooth' });
+        let totalItems = 0;
+        let totalUsd = 0;
+        let itemsHtml = '';
+
+        carrito.forEach(item => {
+            totalItems += item.cantidad;
+            let subtotalUsd = item.precioUSD * item.cantidad;
+            totalUsd += subtotalUsd;
+
+            itemsHtml += `
+                <div class="cart-item-row">
+                    <div>
+                        <div class="cart-item-name">${item.nombre}</div>
+                        <div class="cart-item-price">$${item.precioUSD.toFixed(2)} c/u</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
+                        <span style="font-size: 1.2rem; font-weight: 900; color: #e65100; min-width: 22px; text-align: center;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #f57c00; color: white; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">+</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        let totalBs = (totalUsd * tasaBCV).toFixed(2);
+
+        cuerpoModalMovil.innerHTML = `
+            <div style="flex: 1; overflow-y: auto; margin-bottom: 15px;">
+                ${itemsHtml}
+            </div>
+            <div class="cart-totals">
+                <div class="total-row">
+                    <span>Total USD:</span>
+                    <span class="highlight-price-usd">$${totalUsd.toFixed(2)}</span>
+                </div>
+                <div class="total-row bs-row">
+                    <span>Total Bs (${tasaBCV.toFixed(2)}):</span>
+                    <span class="highlight-price-bs">Bs. ${totalBs}</span>
+                </div>
+            </div>
+            <div class="cart-actions">
+                <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar</button>
+                <button class="btn-whatsapp" onclick="enviarWhatsApp()">Pedir por WhatsApp</button>
+            </div>
+        `;
+    }
+
+    modalMovil.style.display = 'flex';
+}
+
+function cerrarCarritoMovil() {
+    const modalMovil = document.getElementById('mobileCartModal');
+    if (modalMovil) {
+        modalMovil.style.display = 'none';
     }
 }
 
-function vaciarCarrito() {
-    carrito = [];
-    actualizarCarritoUI();
-    renderizarTarjetas();
-}
+function enviarWhatsApp() {
+    if (carrito.length === 0) return;
 
-function enviarPedidoWhatsApp() {
-    if (carrito.length === 0) {
-        alert("Tu carrito está vacío");
-        return;
-    }
-
-    let mensaje = "Hola, ¡quiero hacer el siguiente pedido! 🛒:%0A";
+    let mensaje = "¡Hola! Quisiera realizar el siguiente pedido:\n\n";
     let totalUsd = 0;
 
     carrito.forEach(item => {
         let subtotal = item.precioUSD * item.cantidad;
         totalUsd += subtotal;
-        mensaje += `- ${item.cantidad}x ${item.nombre} (${item.presentacion}) - $${subtotal.toFixed(2)}%0A`;
+        mensaje = mensaje + `- ${item.cantidad}x ${item.nombre} (${item.presentacion}) - $${subtotal.toFixed(2)}\n`;
     });
 
-    let totalBs = totalUsd * tasaBCV;
-    mensaje += `%0A*Total USD:* $${totalUsd.toFixed(2)}`;
-    mensaje += `%0A*Total Bs:* Bs. ${totalBs.toFixed(2)}`;
-    mensaje += `%0A_(Tasa BCV: Bs. ${tasaBCV.toFixed(2)})_`;
+    let totalBs = (totalUsd * tasaBCV).toFixed(2);
+    mensaje = mensaje + `\n*Total USD:* $${totalUsd.toFixed(2)}`;
+    mensaje = mensaje + `\n*Total Bs:* Bs. ${totalBs} (Tasa: ${tasaBCV.toFixed(2)})`;
 
-    const numeroWhatsApp = "584120000000"; 
-    window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
+    // Reemplaza con tu número de teléfono de WhatsApp en formato internacional (ej: 58412...)
+    let numeroWhatsApp = "584120000000"; 
+    let url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensaje)}`;
+    
+    window.open(url, '_blank');
 }

@@ -3,57 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Precios e Inventario</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Iconos para la barra móvil -->
+    <title>Tienda Online</title>
+    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Cabecera -->
     <header class="header">
-        <h1>PRECIOS ACTUALIZADOS</h1>
-        <p class="update-tag">Última actualización: Hoy</p>
+        <h1>Mi Tienda Online</h1>
+        <div class="update-tag">Catálogo Actualizado</div>
     </header>
 
-    <div id="mainLayout" class="main-layout center-mode">
-
-        <div class="content-center">
-            <section class="controls-container">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Buscar producto..." onkeyup="filterProducts()">
-                </div>
-                
-                <div class="category-buttons">
-                    <button class="btn-cat active" onclick="filterCategory('todos')">Todos</button>
-                    <button class="btn-cat" onclick="filterCategory('viveres')">Víveres</button>
-                    <button class="btn-cat" onclick="filterCategory('charcuteria')">Charcutería</button>
-                    <button class="btn-cat" onclick="filterCategory('verduras')">Verduras</button>
-                    <button class="btn-cat" onclick="filterCategory('refrescos')">Refrescos</button>
-                    <button class="btn-cat" onclick="filterCategory('chucherias')">Chucherías</button>
-                    <button class="btn-cat" onclick="filterCategory('helados')">Helados</button>
-                </div>
-            </section>
-
-            <!-- Cuadrícula de Tarjetas -->
-            <main class="grid-container" id="productsGrid">
-                <!-- Se llena dinámicamente con JavaScript -->
-            </main>
-
-            <div class="tasa-box">
-                Tasa del dólar oficial BCV: <span id="tasa-dolar">Cargando...</span>
-            </div>
+    <!-- Caja de Tasa BCV -->
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 15px;">
+        <div class="tasa-box">
+            Tasa BCV del día: <span id="tasa-dolar">Cargando...</span>
         </div>
+    </div>
 
-        <!-- Carrito Lateral (PC) -->
-        <aside id="cartSidebar" class="cart-sidebar" style="display: none;">
+    <!-- Layout Principal -->
+    <main class="main-layout" id="mainLayout">
+        
+        <!-- Centro: Buscador, Categorías y Productos -->
+        <section class="content-center">
+            <div class="controls-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterProducts()">
+                </div>
+                <div class="category-buttons">
+                    <button class="btn-cat active" onclick="filterCategory('todos', event)">Todos</button>
+                    <button class="btn-cat" onclick="filterCategory('viveres', event)">Víveres</button>
+                    <button class="btn-cat" onclick="filterCategory('limpieza', event)">Limpieza</button>
+                    <button class="btn-cat" onclick="filterCategory('embutidos', event)">Embutidos</button>
+                </div>
+            </div>
+
+            <!-- Cuadrícula de productos inyectada por JS -->
+            <div class="grid-container" id="productsGrid">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </section>
+
+        <!-- Sidebar del Carrito (Escritorio) -->
+        <aside class="cart-sidebar" id="cartSidebar" style="display: none;">
             <div class="cart-header">
-                <h3>🛒 Tu Pedido</h3>
-                <span id="carrito-contador-badge" class="badge-count">0</span>
+                <h2>Carrito</h2>
+                <span class="badge-count" id="carrito-contador-badge">0</span>
             </div>
-            
-            <div id="lista-carrito" class="cart-items-container">
+            <div class="cart-items-container" id="lista-carrito">
+                <!-- Items del carrito -->
             </div>
-
             <div class="cart-footer">
                 <div class="cart-totals">
                     <div class="total-row">
@@ -65,35 +66,46 @@
                         <span class="highlight-price-bs">Bs. <span id="carrito-total-bs">0.00</span></span>
                     </div>
                 </div>
-
                 <div class="cart-actions">
-                    <button onclick="vaciarCarrito()" class="btn-vaciar">Vaciar</button>
-                    <button onclick="enviarPedidoWhatsApp()" class="btn-whatsapp">Enviar Pedido 🚀</button>
+                    <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar</button>
+                    <button class="btn-whatsapp" onclick="enviarWhatsApp()">Pedir por WhatsApp</button>
                 </div>
             </div>
         </aside>
 
-    </div>
+    </main>
 
-    <!-- Barra de navegación inferior móvil (Estilo App) -->
+    <!-- Barra Inferior Flotante (Móvil) -->
     <nav class="mobile-bottom-nav">
-        <a href="#" class="nav-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
-            <i class="fa-solid fa-house"></i>
-            <span>Inicio</span>
+        <a href="#" class="nav-item active" onclick="cerrarCarritoMovil(); return false;">
+            <i class="fas fa-store"></i>
+            <span>Tienda</span>
         </a>
         <a href="#" class="nav-item" onclick="abrirCarritoMovil(); return false;">
-            <i class="fa-solid fa-cart-shopping"></i>
+            <i class="fas fa-shopping-cart"></i>
             <span>Carrito</span>
-            <span id="mobile-badge" class="mobile-badge" style="display: none;">0</span>
+            <span class="mobile-badge" id="mobile-badge" style="display: none;">0</span>
         </a>
     </nav>
 
+    <!-- Modal del Carrito para Móviles -->
+    <div id="mobileCartModal" class="mobile-cart-modal" style="display: none;">
+        <div class="mobile-cart-header">
+            <button class="btn-back" onclick="cerrarCarritoMovil()"><i class="fas fa-arrow-left"></i></button>
+            <h2>Tu Carrito</h2>
+        </div>
+        <div id="mobileCartBodyContent" class="mobile-cart-body">
+            <!-- Contenido dinámico para móvil -->
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
-        <p>Los precios están sujetos a cambios sin previo aviso.</p>
+        <p>&copy; 2026 Mi Tienda Online. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
-
 </body>
 </html>
