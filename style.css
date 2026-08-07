@@ -530,10 +530,13 @@ body {
     }
 }
 
-/* Mostrar la barra inferior solo en pantallas de teléfono */
+/* Reglas responsivas: Mostrar barra y ocultar sidebar en teléfonos */
 @media (max-width: 768px) {
     .mobile-bottom-nav {
         display: flex;
+    }
+    .cart-sidebar {
+        display: none !important;
     }
 }
 

@@ -199,6 +199,7 @@ function actualizarCarritoUI() {
         mainLayout.classList.remove('with-cart');
         if (mobileBadge) mobileBadge.style.display = 'none';
     } else {
+        // En PC se muestra el sidebar, en móviles el CSS lo oculta automáticamente
         cartSidebar.style.display = 'flex';
         mainLayout.classList.add('with-cart');
 
@@ -325,7 +326,6 @@ function enviarWhatsApp() {
     mensaje = mensaje + `\n*Total USD:* $${totalUsd.toFixed(2)}`;
     mensaje = mensaje + `\n*Total Bs:* Bs. ${totalBs} (Tasa: ${tasaBCV.toFixed(2)})`;
 
-    // Reemplaza con tu número de teléfono de WhatsApp en formato internacional (ej: 58412...)
     let numeroWhatsApp = "584120000000"; 
     let url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensaje)}`;
     
