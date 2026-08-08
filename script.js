@@ -1,6 +1,7 @@
 let tasaBCV = 36.50; 
 let carrito = [];
 let listaProductosGlobal = [];
+let categoriaActual = 'todos'; // Variable para recordar qué categoría está seleccionada
 
 document.addEventListener('DOMContentLoaded', () => {
     obtenerTasaEstableYProductos();
@@ -41,6 +42,8 @@ async function obtenerProductos() {
     } else {
         listaProductosGlobal = data || [];
         renderizarTarjetas();
+        // Aplicar el filtro actual para que mantenga la categoría seleccionada
+        aplicarFiltroCategoriaVisual(categoriaActual);
     }
 }
 
@@ -111,19 +114,36 @@ function filterProducts() {
 }
 
 function filterCategory(category, event) {
-    let cards = document.querySelectorAll(".product-card");
+    categoriaActual = category; // Guardar la categoría activa
     let buttons = document.querySelectorAll(".btn-cat");
 
     buttons.forEach(btn => btn.classList.remove("active"));
     if (event && event.target) {
         event.target.classList.add("active");
+    } else {
+        // Si se llama internamente, buscar el botón correspondiente y activarlo
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`'${category}'`)) {
+                btn.classList.add("active");
+            }
+        });
     }
 
+    aplicarFiltroCategoriaVisual(category);
+}
+
+function aplicarFiltroCategoriaVisual(category) {
+    let cards = document.querySelectorAll(".product-card");
+    let input = document.getElementById("searchInput").value.toLowerCase();
+
     cards.forEach(card => {
+        let productName = card.querySelector(".product-name").innerText.toLowerCase();
+        let coincideBusqueda = productName.includes(input);
+
         if (category === "todos") {
-            card.style.display = "";
+            card.style.display = coincideBusqueda ? "" : "none";
         } else {
-            if (card.classList.contains(category)) {
+            if (card.classList.contains(category) && coincideBusqueda) {
                 card.style.display = "";
             } else {
                 card.style.display = "none";
@@ -151,6 +171,7 @@ function agregarAlCarrito(idProducto) {
 
     actualizarCarritoUI();
     renderizarTarjetas();
+    aplicarFiltroCategoriaVisual(categoriaActual); // Mantiene el filtro actual
 }
 
 function cambiarCantidad(idProducto, cambio) {
@@ -163,8 +184,8 @@ function cambiarCantidad(idProducto, cambio) {
     }
     actualizarCarritoUI();
     renderizarTarjetas();
+    aplicarFiltroCategoriaVisual(categoriaActual); // Mantiene el filtro actual
     
-    // Si el modal móvil está abierto, actualizar su contenido dinámicamente
     const modalMovil = document.getElementById('mobileCartModal');
     if (modalMovil && modalMovil.style.display === 'flex') {
         abrirCarritoMovil();
@@ -175,6 +196,7 @@ function vaciarCarrito() {
     carrito = [];
     actualizarCarritoUI();
     renderizarTarjetas();
+    aplicarFiltroCategoriaVisual(categoriaActual);
     const modalMovil = document.getElementById('mobileCartModal');
     if (modalMovil && modalMovil.style.display === 'flex') {
         abrirCarritoMovil();
@@ -199,7 +221,6 @@ function actualizarCarritoUI() {
         mainLayout.classList.remove('with-cart');
         if (mobileBadge) mobileBadge.style.display = 'none';
     } else {
-        // En PC se muestra el sidebar, en móviles el CSS lo oculta automáticamente
         cartSidebar.style.display = 'flex';
         mainLayout.classList.add('with-cart');
 

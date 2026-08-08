@@ -11,7 +11,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-bottom: 70px; /* Espacio para que la barra móvil no tape el contenido */
+    padding-bottom: 70px;
 }
 
 .header {
@@ -146,9 +146,11 @@ body {
     overflow: hidden;
 }
 
+/* Presentación en color rojo */
 .product-presentation {
-    font-size: 0.8rem;
-    color: #777;
+    font-size: 0.85rem;
+    color: #d32f2f;
+    font-weight: 700;
     margin-bottom: 6px;
 }
 
@@ -415,7 +417,7 @@ body {
     border-radius: 10px;
 }
 
-/* Estilos de la vista móvil moderna de carrito (Modal a pantalla completa) */
+/* Modal del carrito móvil */
 .mobile-cart-modal {
     position: fixed;
     top: 0;
@@ -530,7 +532,6 @@ body {
     }
 }
 
-/* Reglas responsivas: Mostrar barra y ocultar sidebar en teléfonos */
 @media (max-width: 768px) {
     .mobile-bottom-nav {
         display: flex;
