@@ -236,8 +236,8 @@ function actualizarCarritoUI() {
                         <div class="cart-item-price">$${item.precioUSD.toFixed(2)} c/u</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
-                        <span style="font-size: 1.2rem; font-weight: 900; color: #e65100; min-width: 22px; text-align: center;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #333; color: #fff; border: 1px solid #444; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
+                        <span style="font-size: 1.2rem; font-weight: 900; color: #ff9800; min-width: 22px; text-align: center;">${item.cantidad}</span>
                         <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #f57c00; color: white; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">+</button>
                     </div>
                 </div>
@@ -290,8 +290,8 @@ function abrirCarritoMovil() {
                         <div class="cart-item-price">$${item.precioUSD.toFixed(2)} c/u</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #e0e0e0; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
-                        <span style="font-size: 1.2rem; font-weight: 900; color: #e65100; min-width: 22px; text-align: center;">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${item.id}', -1)" style="background: #333; color: #fff; border: 1px solid #444; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">-</button>
+                        <span style="font-size: 1.2rem; font-weight: 900; color: #ff9800; min-width: 22px; text-align: center;">${item.cantidad}</span>
                         <button onclick="cambiarCantidad('${item.id}', 1)" style="background: #f57c00; color: white; border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">+</button>
                     </div>
                 </div>
@@ -347,7 +347,7 @@ function enviarWhatsApp() {
     mensaje = mensaje + `\n*Total USD:* $${totalUsd.toFixed(2)}`;
     mensaje = mensaje + `\n*Total Bs:* Bs. ${totalBs} (Tasa: ${tasaBCV.toFixed(2)})`;
 
-    let numeroWhatsApp = "584120000000"; 
+    let numeroWhatsApp = "5804125171625"; // Reemplaza con tu número de WhatsApp
     let url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensaje)}`;
     
     window.open(url, '_blank');
